@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="pinmo_label_share_to_social_media">Share to your social media&amp;</string>
+    <string name="pinmo_label_receive_rewards">Receive rewards!</string>
+    <string name="pinmo_label_share_success">Thank you for sharing your comments!</string>
+    <string name="pinmo_label_download">Set our app to redeem</string>
+    <string name="pinmo_btn_label_download">download</string>
+</resources>

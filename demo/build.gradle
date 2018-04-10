@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion versions.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.pinmo.pinmosdkdemo"
+        minSdkVersion versions.demoMinSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(path: ":lib")
+
+    implementation "com.android.support:appcompat-v7:${versions.support_library}"
+    implementation "com.android.support:design:${versions.support_library}"
+
+    implementation "com.squareup.picasso:picasso:${versions.picasso}"
+
+    implementation "com.jakewharton:butterknife:${versions.butter_knife}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butter_knife}"
+
+    implementation "com.jakewharton.timber:timber:${versions.timber}"
+}

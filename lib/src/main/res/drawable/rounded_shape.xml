@@ -1,0 +1,9 @@
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!--This color is for the purpose of drawing shadow. Use backgroundTint if need to customize color-->
+    <solid android:color="#000000"/>
+
+    <corners android:radius="8dp"/>
+</shape>
