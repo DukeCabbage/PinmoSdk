@@ -17,6 +17,9 @@ buildscript {
             "picasso": "2.71828",
             "butter_knife": "8.8.1",
             "timber": "4.7.0",
+
+            "wechat_sdk": "5.1.0",
+            "facebook_sdk": "4.29.0",
     ]
 
     repositories {

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PinmoShareButtonContainer">
+        <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/circle</item>
+        <item name="android:backgroundTint">@color/pinmo_color_primary</item>
+        <item name="android:clickable">true</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+
+    <style name="PinmoShareButtonImage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/circle</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:tint">@color/pinmo_color_primary</item>
+    </style>
+
+</resources>

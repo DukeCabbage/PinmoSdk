@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#BBBBBB"
     tools:context=".MainActivity">
 
     <ImageView
@@ -17,7 +18,7 @@
         android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_test"
+        android:id="@+id/fab_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -30,15 +31,15 @@
         app:fabSize="normal"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_test_2"
+        android:id="@+id/fab_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="100dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/fab"
         android:src="@drawable/ic_done_24dp"
-        android:tint="#FFFFFF"
-        app:backgroundTint="@color/pinmo_color_primary"
+        app:backgroundTint="@android:color/white"
         app:borderWidth="0dp"
         app:fabSize="normal"/>
 

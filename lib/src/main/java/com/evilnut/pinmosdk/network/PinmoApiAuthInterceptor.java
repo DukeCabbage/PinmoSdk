@@ -1,4 +1,4 @@
-package com.pinmo.pinmosdk;
+package com.evilnut.pinmosdk.network;
 
 import android.support.annotation.NonNull;
 
@@ -9,6 +9,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import timber.log.Timber;
 
+/**
+ * Appends APP ID and APP SECRET at the end of the url as query params
+ */
 final class PinmoApiAuthInterceptor implements Interceptor {
 
     private final String appId;

@@ -10,7 +10,7 @@
         android:layout_height="200dp"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/image_banner_share_success"/>
+        android:src="@drawable/no_image"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -36,10 +36,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pinmo_label_receive_rewards"
-            android:textStyle="bold"
             android:textAllCaps="true"
             android:textColor="@color/pinmo_color_primary"
-            android:textSize="22sp"/>
+            android:textSize="22sp"
+            android:textStyle="bold"/>
 
         <View
             android:layout_width="match_parent"
@@ -51,42 +51,64 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal"
-            android:paddingTop="8dp"
             android:paddingEnd="16dp"
-            android:paddingStart="16dp">
+            android:paddingStart="16dp"
+            android:paddingTop="8dp">
 
-            <View
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@color/pinmo_color_primary"/>
+            <FrameLayout
+                style="@style/PinmoShareButtonContainer"
+                android:id="@+id/btn_share_facebook">
 
-            <Space
-                android:layout_width="16dp"
-                android:layout_height="wrap_content"/>
-
-            <View
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@color/pinmo_color_primary"/>
+                <ImageView
+                    style="@style/PinmoShareButtonImage"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_facebook_logo"/>
+            </FrameLayout>
 
             <Space
                 android:layout_width="16dp"
                 android:layout_height="wrap_content"/>
 
-            <View
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@color/pinmo_color_primary"/>
+            <FrameLayout
+                style="@style/PinmoShareButtonContainer"
+                android:id="@+id/btn_share_wechat">
+
+                <ImageView
+                    style="@style/PinmoShareButtonImage"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_wechat_logo"/>
+            </FrameLayout>
 
             <Space
                 android:layout_width="16dp"
                 android:layout_height="wrap_content"/>
 
-            <View
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@color/pinmo_color_primary"/>
+            <FrameLayout
+                style="@style/PinmoShareButtonContainer"
+                android:id="@+id/btn_share_linkedin">
+
+                <ImageView
+                    style="@style/PinmoShareButtonImage"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_linkedin_logo"/>
+            </FrameLayout>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"/>
+
+            <FrameLayout
+                style="@style/PinmoShareButtonContainer"
+                android:id="@+id/btn_share_twitter">
+
+                <ImageView
+                    style="@style/PinmoShareButtonImage"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_twitter_logo"/>
+            </FrameLayout>
 
         </LinearLayout>
 

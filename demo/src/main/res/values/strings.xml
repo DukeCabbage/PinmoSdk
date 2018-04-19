@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PinmoSdk Demo</string>
+    <string name="facebook_app_id" translatable="false">1911702848840933</string>
+    <!--<string name="fb_provider_id" translatable="false">com.facebook.app.FacebookContentProvider1911702848840933</string>-->
 </resources>

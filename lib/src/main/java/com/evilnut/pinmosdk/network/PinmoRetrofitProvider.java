@@ -1,7 +1,4 @@
-package com.pinmo.pinmosdk;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+package com.evilnut.pinmosdk.network;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -9,10 +6,9 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Utility {
-    private static final String END_POINT = "https://www.ylffg.com/";
+public final class PinmoRetrofitProvider {
 
-    static Retrofit provideRetrofit(String appId, String appSecret) {
+    public static Retrofit provide(final String appId, final String appSecret, final String endpoint) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -27,23 +23,7 @@ public class Utility {
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(END_POINT)
+                .baseUrl(endpoint)
                 .build();
     }
-
-//    @NonNull
-//    static <T> T checkNotNull(@Nullable final T reference, final Object errorMessage) {
-//        if (reference == null) {
-//            throw new NullPointerException(String.valueOf(errorMessage));
-//        }
-//        return reference;
-//    }
-//
-//    @NonNull
-//    static <T> T checkNotNull(@Nullable final T reference) {
-//        if (reference == null) {
-//            throw new NullPointerException();
-//        }
-//        return reference;
-//    }
 }
