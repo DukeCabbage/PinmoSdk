@@ -13,6 +13,7 @@ buildscript {
             "rxjava2": "2.1.12",
             "rx_android2": "2.0.2",
             "retrofit2": "2.4.0",
+            "okhttp3": "3.10.0",
             "gson": "2.8.2",
             "picasso": "2.71828",
             "butter_knife": "8.8.1",
