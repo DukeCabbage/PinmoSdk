@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--All resources in a library default to public. To make all resources implicitly private,
+    you must define at least one specific attribute as public. Resources include all files in your
+     project’s res/ directory, such as images. To prevent users of your library from accessing
+     resources intended only for internal use, you should use this automatic private designation
+     mechanism by declaring one or more public resources. Alternately, you can make all resources
+     private by adding an empty <public /> tag , which marks nothing as public, which makes
+      everything else (all resources) private.-->
+
+    <public/>
+</resources>

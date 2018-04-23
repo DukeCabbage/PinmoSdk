@@ -16,7 +16,7 @@ import com.evilnut.pinmosdk.R;
 
 public final class ShareSuccessDialogFragment extends DialogFragment {
 
-    private static final String strStoreLink = "market://details?id=com.google.android.apps.maps";
+    private static final String strStoreLink = "market://details?id=com.evilnut.pinmo";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

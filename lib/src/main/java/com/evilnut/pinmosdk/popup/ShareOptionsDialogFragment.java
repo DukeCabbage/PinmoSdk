@@ -37,37 +37,102 @@ import timber.log.Timber;
 
 final public class ShareOptionsDialogFragment extends DialogFragment {
 
-    private Disposable disposable;
-
-    private ImageView ivBanner;
-    private Bitmap thumbnailBitmap;
-
+    // Link is required with an optional hash tag
     private final View.OnClickListener facebookOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Activity activity = getActivity();
             if (activity == null) return;
-            Toast.makeText(activity, "Facebook on click", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "Facebook on click", Toast.LENGTH_SHORT).show();
 
-            PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null || feed.contentUrl == null) return;
+            final PinmoFeed feed = PinmoApp.get().getFeed();
+            if (feed == null) return;
 
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setShareHashtag(new ShareHashtag.Builder()
-                            .setHashtag("#ConnectTheWorld")
-                            .build())
-                    .setContentUrl(Uri.parse(feed.contentUrl))
-                    .build();
-            ShareDialog.show(activity, content);
+            final String link = feed.getQuestLink("facebook");
+            if (link == null) return;
+
+            ShareLinkContent.Builder builder = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(link));
+
+            if (feed.facebookHashTag != null) {
+                String hashTag = feed.facebookHashTag.startsWith("#")
+                        ? feed.facebookHashTag
+                        : "#" + feed.facebookHashTag;
+
+                hashTag = hashTag.replace(" ", "");
+
+                builder = builder.setShareHashtag(new ShareHashtag.Builder()
+                        .setHashtag(hashTag)
+                        .build());
+            }
+
+            ShareDialog.show(activity, builder.build());
         }
     };
 
+    // Link only
+    private final View.OnClickListener linkedinOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Activity activity = getActivity();
+            if (activity == null) return;
+//            Toast.makeText(activity, "Linkedin on click", Toast.LENGTH_SHORT).show();
+
+            final PinmoFeed feed = PinmoApp.get().getFeed();
+            if (feed == null) return;
+
+            final String link = feed.getQuestLink("linkedin");
+            if (link == null) return;
+
+            if (Utility.isPackageInstalled("com.twitter.android", activity.getPackageManager())) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setPackage("com.twitter.android");
+                shareIntent.setType("text/*");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, link);
+                startActivity(shareIntent);
+            } else {
+                Toast.makeText(activity, "Twitter not installed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    // Link only
+    private final View.OnClickListener twitterOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Activity activity = getActivity();
+            if (activity == null) return;
+//            Toast.makeText(activity, "Twitter on click", Toast.LENGTH_SHORT).show();
+
+            final PinmoFeed feed = PinmoApp.get().getFeed();
+            if (feed == null) return;
+
+            final String link = feed.getQuestLink("twitter");
+            if (link == null) return;
+
+            if (Utility.isPackageInstalled("com.linkedin.android", activity.getPackageManager())) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setPackage("com.linkedin.android");
+                shareIntent.setType("text/*");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, link);
+                startActivity(shareIntent);
+            } else {
+                Toast.makeText(activity, "Linkedin not installed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+    private Disposable disposable;
+    private ImageView ivBanner;
+    private Bitmap thumbnailBitmap;
+
+    // Link requires plus optional title and thumbnail image
+    // thumbnail has size limit, so recommends cropping in advance
     private final View.OnClickListener wechatOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Activity activity = getActivity();
             if (activity == null) return;
-            Toast.makeText(activity, "Wechat on click", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "Wechat on click", Toast.LENGTH_SHORT).show();
 
             if (getArguments() == null) return;
             String wechatAppId = getArguments().getString("wechatAppId", null);
@@ -76,10 +141,13 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
             if (wechatAppId == null) return;
             IWXAPI wechatApi = WXAPIFactory.createWXAPI(activity, wechatAppId, true);
 
-            PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null || feed.contentUrl == null) return;
+            final PinmoFeed feed = PinmoApp.get().getFeed();
+            if (feed == null) return;
 
-            WXWebpageObject webpageObject = new WXWebpageObject(feed.contentUrl);
+            final String link = feed.getQuestLink("wechat");
+            if (link == null) return;
+
+            WXWebpageObject webpageObject = new WXWebpageObject(link);
             WXMediaMessage msg = new WXMediaMessage(webpageObject);
 
             if (shareToFriend) {
@@ -106,50 +174,6 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
             req.message = msg;
 
             wechatApi.sendReq(req);
-        }
-    };
-
-    private final View.OnClickListener linkedinOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Activity activity = getActivity();
-            if (activity == null) return;
-            Toast.makeText(activity, "Linkedin on click", Toast.LENGTH_SHORT).show();
-
-            PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null || feed.contentUrl == null) return;
-
-            if (Utility.isPackageInstalled("com.twitter.android", activity.getPackageManager())) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setPackage("com.twitter.android");
-                shareIntent.setType("text/*");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, feed.contentUrl);
-                startActivity(shareIntent);
-            } else {
-                Toast.makeText(activity, "Twitter not installed", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    private final View.OnClickListener twitterOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Activity activity = getActivity();
-            if (activity == null) return;
-            Toast.makeText(activity, "Twitter on click", Toast.LENGTH_SHORT).show();
-
-            PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null || feed.contentUrl == null) return;
-
-            if (Utility.isPackageInstalled("com.linkedin.android", activity.getPackageManager())) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setPackage("com.linkedin.android");
-                shareIntent.setType("text/*");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, feed.contentUrl);
-                startActivity(shareIntent);
-            } else {
-                Toast.makeText(activity, "Linkedin not installed", Toast.LENGTH_SHORT).show();
-            }
         }
     };
 
@@ -181,6 +205,9 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        // Listens on feed fetching status
+        // Once a new feed is available, starts downloading images
         PinmoApp.get().getFeedPublisher()
                 .subscribe(new Observer<PinmoFeed>() {
                     @Override
@@ -188,34 +215,45 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
 
                     @Override
                     public void onNext(final PinmoFeed pinmoFeed) {
-                        if (pinmoFeed.imageUrl == null) return;
-                        Picasso.get()
-                                .load(pinmoFeed.imageUrl)
-                                .transform(new Transformation() {
-                                    @Override
-                                    public Bitmap transform(final Bitmap source) { return Utility.makeThumbnail(source); }
+                        // Load and crop image for wechat moment thumbnail image
+                        // If image is unavailable, fallback to use background image
+                        if (pinmoFeed.getMomentImageUrl() != null
+                                || pinmoFeed.getBackgroundImageUrl() != null) {
 
-                                    @Override
-                                    public String key() { return "thumb_" + pinmoFeed.imageUrl; }
-                                })
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) { thumbnailBitmap = bitmap; }
+                            String url = pinmoFeed.getMomentImageUrl();
+                            if (url == null) url = pinmoFeed.getBackgroundImageUrl();
 
-                                    @Override
-                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) { Timber.e(e); }
+                            Picasso.get()
+                                    .load(url)
+                                    .transform(new Transformation() {
+                                        @Override
+                                        public Bitmap transform(final Bitmap source) { return Utility.makeThumbnail(source); }
 
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) { }
-                                });
+                                        @Override
+                                        public String key() { return "thumb_" + pinmoFeed.questId; }
+                                    })
+                                    .into(new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) { thumbnailBitmap = bitmap; }
 
-                        Picasso.get()
-                                .load(pinmoFeed.imageUrl)
-                                .placeholder(R.drawable.placeholder)
-                                .error(R.drawable.no_image)
-                                .fit()
-                                .centerCrop()
-                                .into(ivBanner);
+                                        @Override
+                                        public void onBitmapFailed(Exception e, Drawable errorDrawable) { Timber.e(e); }
+
+                                        @Override
+                                        public void onPrepareLoad(Drawable placeHolderDrawable) { }
+                                    });
+                        }
+
+                        // Load and fit background image for the popup
+                        if (pinmoFeed.getBackgroundImageUrl() != null) {
+                            Picasso.get()
+                                    .load(pinmoFeed.getBackgroundImageUrl())
+                                    .placeholder(R.drawable.placeholder)
+                                    .error(R.drawable.no_image)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(ivBanner);
+                        }
                     }
 
                     @Override
@@ -232,7 +270,12 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
         if (disposable != null) disposable.dispose();
     }
 
-
+    /**
+     * Creates a new instance of {@link ShareOptionsDialogFragment}
+     *
+     * @param wechatId,      required if want to access features in wechat sdk
+     * @param shareToFriend, if true, will share directly to friends instead of moments
+     */
     public static ShareOptionsDialogFragment newInstance(@NonNull String wechatId, boolean shareToFriend) {
         ShareOptionsDialogFragment frag = new ShareOptionsDialogFragment();
 

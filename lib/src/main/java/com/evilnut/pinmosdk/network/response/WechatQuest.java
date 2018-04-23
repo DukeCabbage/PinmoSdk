@@ -2,7 +2,7 @@ package com.evilnut.pinmosdk.network.response;
 
 import com.google.gson.annotations.SerializedName;
 
-public class FbQuest {
+public class WechatQuest {
 
     @SerializedName("quest_link")
     public String questLink;

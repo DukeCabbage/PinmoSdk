@@ -3,7 +3,7 @@
 buildscript {
 
     ext.versions = [
-            "minSdkVersion"    : 21,
+            "minSdkVersion"    : 16,
             "demoMinSdkVersion": 21,
             "targetSdkVersion" : 27,
             "compileSdkVersion": 27,
@@ -21,6 +21,11 @@ buildscript {
             "wechat_sdk": "5.1.0",
             "facebook_sdk": "4.29.0",
     ]
+
+    ext.versionMajor = 0
+    ext.versionMinor = 1
+    ext.versionPatch = 0
+    ext.versionBuild = 1
 
     repositories {
         google()

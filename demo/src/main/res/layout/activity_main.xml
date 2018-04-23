@@ -8,14 +8,42 @@
     android:background="#BBBBBB"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/iv_test"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/colorAccent"
-        android:contentDescription="@null"
-        android:visibility="gone"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_user_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="test123@gmail.com"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/btn_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="16dp"
+            android:text="refresh"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_share"

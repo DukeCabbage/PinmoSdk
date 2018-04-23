@@ -26,29 +26,37 @@ public final class PinmoApp {
 
     private static PinmoApp singleton;
 
+    private final String endpoint;
     private final PinmoApi pinmoApi;
     private final String wechatAppId;
 
     private BehaviorSubject<PinmoFeed> feedPublisher;
 
     private PinmoApp(final PinmoAppOptions options) {
-        String mAppId = options.appId;
-        String mAppSecret = options.appSecret;
-        String mEndpoint = options.pinmoEndpoint;
+        String appId = options.appId;
+        String appSecret = options.appSecret;
+        this.endpoint = options.pinmoEndpoint;
         wechatAppId = options.wechatAppId;
 
-        Retrofit retrofit = PinmoRetrofitProvider.provide(mAppId, mAppSecret, mEndpoint);
+        Retrofit retrofit = PinmoRetrofitProvider.provide(appId, appSecret, endpoint);
         pinmoApi = retrofit.create(PinmoApi.class);
     }
 
+    /**
+     * Lazy init a BehaviorSubject if not initialized yet or terminated for some reason.
+     * {@link ShareOptionsDialogFragment} will listen on this broadcaster for update.
+     * Also exposed to any client app wishes to subscribe to the status changes.
+     */
     public BehaviorSubject<PinmoFeed> getFeedPublisher() {
         if (feedPublisher == null || feedPublisher.hasComplete() || feedPublisher.hasThrowable()) {
-            // TODO:
-//            feedPublisher = BehaviorSubject.create();
-            feedPublisher = BehaviorSubject.createDefault(PinmoFeed.mock());
+            feedPublisher = BehaviorSubject.create();
+//            feedPublisher = BehaviorSubject.createDefault(PinmoFeed.mock());
+//            feedPublisher = BehaviorSubject.createDefault(PinmoFeed.fromError(new RuntimeException("Mock error")));
         }
         return feedPublisher;
     }
+
+    public String getEndpoint() { return endpoint; }
 
     @Nullable
     public PinmoFeed getFeed() {
@@ -79,7 +87,7 @@ public final class PinmoApp {
                     public void onError(Throwable e) { Timber.e(e); }
 
                     @Override
-                    public void onComplete() { Timber.e("Unexpected onComplete"); }
+                    public void onComplete() { }
                 });
     }
 
@@ -101,6 +109,9 @@ public final class PinmoApp {
         if (singleton == null) {
             synchronized (PinmoApp.class) {
                 if (singleton == null) {
+                    Timber.i("Build type: %s", BuildConfig.BUILD_TYPE);
+                    Timber.i("Version %s, code %d", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
+
                     singleton = new PinmoApp(options);
                 }
             }

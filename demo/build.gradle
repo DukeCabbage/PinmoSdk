@@ -7,8 +7,9 @@ android {
         applicationId "com.evilnut.pinmosdkdemo"
         minSdkVersion versions.demoMinSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
 
     File propsFile = rootProject.file("keystore.properties")
@@ -59,4 +60,8 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butter_knife}"
 
     implementation "com.jakewharton.timber:timber:${versions.timber}"
+
+    // ReactiveX
+    implementation "io.reactivex.rxjava2:rxjava:${versions.rx_java2}"
+    implementation "io.reactivex.rxjava2:rxandroid:${versions.rx_android2}"
 }

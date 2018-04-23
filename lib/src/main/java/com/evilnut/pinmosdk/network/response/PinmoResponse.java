@@ -7,12 +7,6 @@ public class PinmoResponse {
     @SerializedName("data")
     public Data data;
 
-    @SerializedName("image_path")
-    public String imagePath;
-
-    @SerializedName("type")
-    public String type;
-
     @SerializedName("status")
     public String status;
 }
