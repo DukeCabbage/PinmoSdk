@@ -47,14 +47,20 @@ android {
 }
 
 repositories {
-    flatDir {
-        dirs "libs"
+    maven {
+        url "file:/Users/Leo/myMaven/repository"
     }
 }
 
+
 dependencies {
+//    implementation fileTree(dir: "libs", include: ["*.jar"])
 //    implementation(name: "lib-debug", ext: "aar")
-    implementation(name: "lib-release", ext: "aar")
+//    implementation(name: "lib-release", ext: "aar")
+
+//    implementation project(path: ":lib")
+
+    implementation "com.evilnut.pinmo:pinmosdk:0.1.0"
 
     implementation "com.android.support:design:${versions.support_library}"
     // Force resolution
@@ -64,23 +70,23 @@ dependencies {
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxjava:${versions.rx_java2}"
     implementation "io.reactivex.rxjava2:rxandroid:${versions.rx_android2}"
-
-    implementation("com.squareup.retrofit2:retrofit:${versions.retrofit2}") { exclude module: "okhttp" }
-    implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit2}"
-    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit2}"
-
-    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp3}"
-    implementation "com.squareup.okhttp3:logging-interceptor:${versions.okhttp3}"
-
-    implementation "com.google.code.gson:gson:${versions.gson}"
-
-    implementation "com.squareup.picasso:picasso:${versions.picasso}"
-
+//
+//    implementation("com.squareup.retrofit2:retrofit:${versions.retrofit2}") { exclude module: "okhttp" }
+//    implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit2}"
+//    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit2}"
+//
+//    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp3}"
+//    implementation "com.squareup.okhttp3:logging-interceptor:${versions.okhttp3}"
+//
+//    implementation "com.google.code.gson:gson:${versions.gson}"
+//
+//    implementation "com.squareup.picasso:picasso:${versions.picasso}"
+//
     implementation "com.jakewharton.timber:timber:${versions.timber}"
-
-    implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:${versions.wechat_sdk}"
-
-    implementation "com.facebook.android:facebook-share:${versions.facebook_sdk}"
+//
+//    implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:${versions.wechat_sdk}"
+//
+//    implementation "com.facebook.android:facebook-share:${versions.facebook_sdk}"
 
     implementation "com.jakewharton:butterknife:${versions.butter_knife}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butter_knife}"

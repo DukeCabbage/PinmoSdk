@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion versions.compileSdkVersion
@@ -51,4 +52,34 @@ dependencies {
     implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:${versions.wechat_sdk}"
 
     implementation "com.facebook.android:facebook-share:${versions.facebook_sdk}"
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            // Don't forget to change these
+            groupId "com.evilnut.pinmo"
+            artifactId "pinmosdk"
+            version "${versionMajor}.${versionMinor}.${versionPatch}"
+
+            artifact(bundleRelease)
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode("dependencies")
+                configurations.implementation.allDependencies.each {
+                    if(it.group != null && (it.name != null || "unspecified".equals(it.name)) && it.version != null) {
+                        def dependencyNode = dependenciesNode.appendNode("dependency")
+                        dependencyNode.appendNode("groupId", it.group)
+                        dependencyNode.appendNode("artifactId", it.name)
+                        dependencyNode.appendNode("version", it.version)
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "file:/Users/Leo/myMaven/repository"
+        }
+    }
 }
