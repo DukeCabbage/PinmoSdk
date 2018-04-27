@@ -26,7 +26,7 @@ buildscript {
     ext.versionMajor = 0
     ext.versionMinor = 1
     ext.versionPatch = 0
-    ext.versionBuild = 1
+    ext.versionBuild = 2
 
     repositories {
         google()

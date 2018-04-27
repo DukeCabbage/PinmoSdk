@@ -9,7 +9,7 @@ android {
         targetSdkVersion versions.targetSdkVersion
 
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}-${versionBuild}"
     }
 
     buildTypes {
@@ -60,7 +60,7 @@ publishing {
             // Don't forget to change these
             groupId "com.evilnut.pinmo"
             artifactId "pinmosdk"
-            version "${versionMajor}.${versionMinor}.${versionPatch}"
+            version "${versionMajor}.${versionMinor}.${versionPatch}-${versionBuild}"
 
             artifact(bundleRelease)
             pom.withXml {

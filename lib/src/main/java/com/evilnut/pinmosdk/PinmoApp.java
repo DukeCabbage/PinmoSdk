@@ -64,7 +64,8 @@ public final class PinmoApp {
     }
 
     public void fetchFeed(@NonNull final String userEmail) {
-        pinmoApi.getTest(userEmail)
+        pinmoApi.getTest(userEmail, null)
+//        pinmoApi.getTest(userEmail, 4)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())

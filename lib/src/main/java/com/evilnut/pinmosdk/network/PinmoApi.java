@@ -9,5 +9,6 @@ import retrofit2.http.Query;
 public interface PinmoApi {
 
     @GET("pinsdk")
-    Observable<PinmoResponse> getTest(@Query("email") String userEmail);
+    Observable<PinmoResponse> getTest(@Query("email") String userEmail,
+                                      @Query("quest_id") Integer questId);
 }

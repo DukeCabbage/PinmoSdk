@@ -31,6 +31,8 @@ import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.util.Date;
+
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
@@ -46,10 +48,16 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
 //            Toast.makeText(activity, "Facebook on click", Toast.LENGTH_SHORT).show();
 
             final PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null) return;
+            if (feed == null) {
+                Toast.makeText(activity, R.string.err_no_quest, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             final String link = feed.getQuestLink("facebook");
-            if (link == null) return;
+            if (link == null) {
+                Toast.makeText(activity, R.string.err_no_link, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             ShareLinkContent.Builder builder = new ShareLinkContent.Builder()
                     .setContentUrl(Uri.parse(link));
@@ -79,19 +87,25 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
 //            Toast.makeText(activity, "Linkedin on click", Toast.LENGTH_SHORT).show();
 
             final PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null) return;
+            if (feed == null) {
+                Toast.makeText(activity, R.string.err_no_quest, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             final String link = feed.getQuestLink("linkedin");
-            if (link == null) return;
+            if (link == null) {
+                Toast.makeText(activity, R.string.err_no_link, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            if (Utility.isPackageInstalled("com.twitter.android", activity.getPackageManager())) {
+            if (Utility.isPackageInstalled("com.linkedin.android", activity.getPackageManager())) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setPackage("com.twitter.android");
+                shareIntent.setPackage("com.linkedin.android");
                 shareIntent.setType("text/*");
                 shareIntent.putExtra(Intent.EXTRA_TEXT, link);
                 startActivity(shareIntent);
             } else {
-                Toast.makeText(activity, "Twitter not installed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Linkedin not installed", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -105,25 +119,33 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
 //            Toast.makeText(activity, "Twitter on click", Toast.LENGTH_SHORT).show();
 
             final PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null) return;
+            if (feed == null) {
+                Toast.makeText(activity, R.string.err_no_quest, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             final String link = feed.getQuestLink("twitter");
-            if (link == null) return;
+            if (link == null) {
+                Toast.makeText(activity, R.string.err_no_link, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            if (Utility.isPackageInstalled("com.linkedin.android", activity.getPackageManager())) {
+            if (Utility.isPackageInstalled("com.twitter.android", activity.getPackageManager())) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setPackage("com.linkedin.android");
+                shareIntent.setPackage("com.twitter.android");
                 shareIntent.setType("text/*");
                 shareIntent.putExtra(Intent.EXTRA_TEXT, link);
                 startActivity(shareIntent);
             } else {
-                Toast.makeText(activity, "Linkedin not installed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Twitter not installed", Toast.LENGTH_SHORT).show();
             }
         }
     };
+
+    private IWXAPI wechatApi;
     private Disposable disposable;
     private ImageView ivBanner;
-    private Bitmap thumbnailBitmap;
+    private Bitmap thumbnailBitmap = null;
 
     // Link requires plus optional title and thumbnail image
     // thumbnail has size limit, so recommends cropping in advance
@@ -134,18 +156,27 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
             if (activity == null) return;
 //            Toast.makeText(activity, "Wechat on click", Toast.LENGTH_SHORT).show();
 
-            if (getArguments() == null) return;
-            String wechatAppId = getArguments().getString("wechatAppId", null);
-            boolean shareToFriend = getArguments().getBoolean("shareToFriend", false);
+            if (wechatApi == null) {
+                Toast.makeText(activity, R.string.err_wechat_not_configured, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            if (wechatAppId == null) return;
-            IWXAPI wechatApi = WXAPIFactory.createWXAPI(activity, wechatAppId, true);
+            boolean shareToFriend = false;
+            if (getArguments() != null) {
+                shareToFriend = getArguments().getBoolean("shareToFriend", false);
+            }
 
             final PinmoFeed feed = PinmoApp.get().getFeed();
-            if (feed == null) return;
+            if (feed == null) {
+                Toast.makeText(activity, R.string.err_no_quest, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             final String link = feed.getQuestLink("wechat");
-            if (link == null) return;
+            if (link == null) {
+                Toast.makeText(activity, R.string.err_no_link, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             WXWebpageObject webpageObject = new WXWebpageObject(link);
             WXMediaMessage msg = new WXMediaMessage(webpageObject);
@@ -162,7 +193,10 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
 
             // Thumbnail
             if (thumbnailBitmap != null) {
-                msg.thumbData = Utility.bmpToByteArray(thumbnailBitmap, false);
+                msg.thumbData = Utility.bmpToByteArray(thumbnailBitmap, false, false);
+            } else if (feed.getMomentImageUrl() != null || feed.getBackgroundImageUrl() != null) {
+                Toast.makeText(activity, R.string.err_moment_image_in_progress, Toast.LENGTH_SHORT).show();
+                return;
             }
 
             SendMessageToWX.Req req = new SendMessageToWX.Req();
@@ -186,6 +220,14 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        if (getArguments() != null) {
+            String wechatAppId = getArguments().getString("wechatAppId", null);
+            if (wechatAppId != null) {
+                wechatApi = WXAPIFactory.createWXAPI(getActivity(), wechatAppId, true);
+            }
+        }
+
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_share_options, null);
 
         ivBanner = view.findViewById(R.id.iv_banner);
@@ -195,12 +237,27 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
         view.findViewById(R.id.btn_share_linkedin).setOnClickListener(linkedinOnClick);
         view.findViewById(R.id.btn_share_twitter).setOnClickListener(twitterOnClick);
 
+
         return new AlertDialog.Builder(getActivity())
                 .setTitle(null)
                 .setCancelable(false)
                 .setView(view)
                 .create();
     }
+
+    private Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+            Timber.v("Thumbnail loaded, from %s", from);
+            thumbnailBitmap = bitmap;
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) { Timber.e(e); }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) { }
+    };
 
     @Override
     public void onStart() {
@@ -215,6 +272,8 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
 
                     @Override
                     public void onNext(final PinmoFeed pinmoFeed) {
+                        Timber.d("onNext %s", pinmoFeed.questId);
+
                         // Load and crop image for wechat moment thumbnail image
                         // If image is unavailable, fallback to use background image
                         if (pinmoFeed.getMomentImageUrl() != null
@@ -223,6 +282,11 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
                             String url = pinmoFeed.getMomentImageUrl();
                             if (url == null) url = pinmoFeed.getBackgroundImageUrl();
 
+                            Timber.v(url);
+
+                            if (thumbnailBitmap != null) thumbnailBitmap.recycle();
+                            thumbnailBitmap = null;
+
                             Picasso.get()
                                     .load(url)
                                     .transform(new Transformation() {
@@ -230,18 +294,9 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
                                         public Bitmap transform(final Bitmap source) { return Utility.makeThumbnail(source); }
 
                                         @Override
-                                        public String key() { return "thumb_" + pinmoFeed.questId; }
+                                        public String key() { return "thumb_" + pinmoFeed.questId + new Date().getTime(); }
                                     })
-                                    .into(new Target() {
-                                        @Override
-                                        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) { thumbnailBitmap = bitmap; }
-
-                                        @Override
-                                        public void onBitmapFailed(Exception e, Drawable errorDrawable) { Timber.e(e); }
-
-                                        @Override
-                                        public void onPrepareLoad(Drawable placeHolderDrawable) { }
-                                    });
+                                    .into(target);
                         }
 
                         // Load and fit background image for the popup
@@ -257,7 +312,10 @@ final public class ShareOptionsDialogFragment extends DialogFragment {
                     }
 
                     @Override
-                    public void onError(Throwable e) { Timber.e(e); }
+                    public void onError(Throwable e) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Timber.e(e);
+                    }
 
                     @Override
                     public void onComplete() { Timber.e("Unexpected onComplete"); }

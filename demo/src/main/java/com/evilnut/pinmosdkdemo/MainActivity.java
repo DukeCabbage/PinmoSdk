@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.evilnut.pinmosdk.BuildConfig;
 import com.evilnut.pinmosdk.PinmoApp;
 import com.evilnut.pinmosdk.PinmoFeed;
 
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.et_user_email) EditText etUserEmail;
     @BindView(R.id.btn_refresh) Button btnRefresh;
     @BindView(R.id.tv_status) TextView tvStatus;
+    @BindView(R.id.tv_version) TextView tvVersion;
 
     private Disposable disposable;
 
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         PinmoApp.initApp(MyApplication.pinmoAppOptions);
 
         btnRefresh.performClick();
+
+        tvVersion.setText("Ver. " + BuildConfig.VERSION_NAME);
     }
 
     @Override

@@ -7,13 +7,17 @@ import android.graphics.Rect;
 
 import java.io.ByteArrayOutputStream;
 
+import timber.log.Timber;
+
 final class Utility {
 
     static Bitmap makeThumbnail(final Bitmap source) {
-        int width = source.getHeight();
-        int height = source.getWidth();
+        int width = source.getWidth();
+        int height = source.getHeight();
 
         float ratio = (float) Math.min(width, height) / (float) Math.max(width, height);
+
+        Timber.v("Original image dimension: %d, %d, ratio: %f", width, height, ratio);
 
         int thumbWidth, thumbHeight;
         if (width > height) {
@@ -24,7 +28,12 @@ final class Utility {
             thumbHeight = 128;
         }
 
+        Timber.v("Cropped dimension: %d, %d", thumbWidth, thumbHeight);
+
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(source, thumbWidth, thumbHeight, true);
+
+        Timber.v("Scaling done");
+
         if (scaledBitmap != source) {
             // Same bitmap is returned if sizes are the same
             source.recycle();
@@ -33,37 +42,52 @@ final class Utility {
         return scaledBitmap;
     }
 
-    static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
-        int i;
-        int j;
-        if (bmp.getHeight() > bmp.getWidth()) {
-            i = bmp.getWidth();
-            j = bmp.getWidth();
+    // If fill is true, smaller dimension of the source bitmap will be used, extra will be cropped out
+    // If fill is false, bigger dimension will be used, and extra space will be padded
+    static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle, final boolean fill) {
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+
+        boolean landscape = width > height;
+
+        int hi = landscape ? width : height;
+        int lo = landscape ? height : width;
+
+        int offSet = (hi - lo) /2;
+
+        Timber.v("landscape: %b", landscape);
+        Timber.v("offSet %d", offSet);
+
+        Bitmap localBitmap = Bitmap.createBitmap(hi, hi, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(localBitmap);
+        if (fill) {
+            Rect src = landscape
+                    ? new Rect(offSet, 0, hi - offSet, lo)
+                    : new Rect(0, offSet, lo, hi - offSet);
+
+            localCanvas.drawBitmap(bmp, src, new Rect(0, 0, hi, hi), null);
         } else {
-            i = bmp.getHeight();
-            j = bmp.getHeight();
+            Rect dest = landscape
+                    ? new Rect(0, offSet, hi, hi - offSet)
+                    : new Rect(offSet, 0, hi - offSet, hi);
+
+            localCanvas.drawBitmap(bmp, null, dest, null);
         }
 
-        Bitmap localBitmap = Bitmap.createBitmap(i, j, Bitmap.Config.RGB_565);
-        Canvas localCanvas = new Canvas(localBitmap);
 
-        while (true) {
-            localCanvas.drawBitmap(bmp, new Rect(0, 0, i, j), new Rect(0, 0, i, j), null);
-            if (needRecycle)
-                bmp.recycle();
-            ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-            localBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
-                    localByteArrayOutputStream);
-            localBitmap.recycle();
-            byte[] arrayOfByte = localByteArrayOutputStream.toByteArray();
-            try {
-                localByteArrayOutputStream.close();
-                return arrayOfByte;
-            } catch (Exception e) {
-                //F.out(e);
-            }
-            i = bmp.getHeight();
-            j = bmp.getHeight();
+        ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
+        localBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
+                localByteArrayOutputStream);
+        localBitmap.recycle();
+        byte[] arrayOfByte = localByteArrayOutputStream.toByteArray();
+
+        if (needRecycle) bmp.recycle();
+        try {
+            localByteArrayOutputStream.close();
+            return arrayOfByte;
+        } catch (Exception e) {
+            Timber.e(e);
+            return new byte[]{};
         }
     }
 
@@ -76,6 +100,7 @@ final class Utility {
             packageManager.getPackageInfo(packageName, 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
+            Timber.w(e);
             return false;
         }
     }

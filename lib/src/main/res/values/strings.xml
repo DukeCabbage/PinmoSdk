@@ -5,4 +5,9 @@
     <string name="pinmo_label_share_success">Thank you for sharing your comments!</string>
     <string name="pinmo_label_download">Set our app to redeem</string>
     <string name="pinmo_btn_label_download">download</string>
+
+    <string name="err_wechat_not_configured">Wechat sdk not available</string>
+    <string name="err_no_quest">No quest data yet</string>
+    <string name="err_no_link">No quest link</string>
+    <string name="err_moment_image_in_progress">Image downloading not finished yet</string>
 </resources>
