@@ -1,4 +1,5 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
+apply plugin: "project-report"
 
 android {
     compileSdkVersion versions.compileSdkVersion
@@ -59,13 +60,10 @@ dependencies {
 //    implementation(name: "lib-release", ext: "aar")
 
 //    implementation project(path: ":lib")
-
-    implementation "com.evilnut.pinmo:pinmosdk:0.1.0-2"
+//
+    implementation "com.evilnut.pinmo:pinmosdk:0.1.0-3"
 
     implementation "com.android.support:design:${versions.support_library}"
-    // Force resolution
-    implementation "com.android.support:cardview-v7:${versions.support_library}"
-    implementation "com.android.support:customtabs:${versions.support_library}"
 
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxjava:${versions.rx_java2}"

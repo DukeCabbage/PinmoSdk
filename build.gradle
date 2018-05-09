@@ -4,13 +4,13 @@ buildscript {
 
     ext.versions = [
             "minSdkVersion"    : 16,
-            "demoMinSdkVersion": 21,
+            "demoMinSdkVersion": 16,
             "targetSdkVersion" : 27,
             "compileSdkVersion": 27,
 
             "gradle": "3.1.0",
-            "support_library": "27.1.0",
-            "rxjava2": "2.1.12",
+            "support_library": "27.1.1",
+            "rx_java2": "2.1.12",
             "rx_android2": "2.0.2",
             "retrofit2": "2.4.0",
             "okhttp3": "3.10.0",
@@ -26,7 +26,7 @@ buildscript {
     ext.versionMajor = 0
     ext.versionMinor = 1
     ext.versionPatch = 0
-    ext.versionBuild = 2
+    ext.versionBuild = 3
 
     repositories {
         google()
