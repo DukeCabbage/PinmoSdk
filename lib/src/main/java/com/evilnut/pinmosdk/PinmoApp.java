@@ -64,7 +64,11 @@ public final class PinmoApp {
     }
 
     public void fetchFeed(@NonNull final String userEmail) {
-        pinmoApi.getTest(userEmail, null)
+
+        final String[] pair = userEmail.split("@");
+        if (pair.length != 2) throw new IllegalArgumentException("Invalid email");
+
+        pinmoApi.getTest(pair[0], pair[1], null)
 //        pinmoApi.getTest(userEmail, 4)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())

@@ -61,7 +61,7 @@ dependencies {
 
 //    implementation project(path: ":lib")
 //
-    implementation "com.evilnut.pinmo:pinmosdk:0.1.0-3"
+    implementation "com.evilnut.pinmo:pinmosdk:0.1.0-4"
 
     implementation "com.android.support:design:${versions.support_library}"
 
