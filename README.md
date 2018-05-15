@@ -1,8 +1,31 @@
 # PinmoSdk
 
 ## Installation
+#### Maven (local)
+Create a folder for the artifacts, such as `libs`, then specify it as a maven repository in app `build.gradle`<br/>
+This path can be relative or absolute, such as `url "file:/Users/JohnDoe/myMaven/repository"`
+```groovy
+repository {
+    maven {
+        url "file:libs/"
+    }
+}
+```
+Put the .aar and .pom files in `libs` with a chain of enclosing folders
+```
+libs/com/evilnut/pinmo/pinmosdk/x.y.z/pinmosdk-x.y.z.aar
+libs/com/evilnut/pinmo/pinmosdk/x.y.z/pinmosdk-x.y.z.pom
+```
+
+Add dependency in app `build.gradle`
+```groovy
+dependencies {
+    implementation "com.evilnut.pinmo:pinmosdk:x.y.z"
+}
+```
+
 #### Using AAR directly
-Create a folder called `libs` under app module, then in the app build.gradle specify the following
+Create a folder called `libs` under app module, then in the app `build.gradle` specify the following
 ```groovy
 repositories {
     flatDir {
@@ -10,16 +33,12 @@ repositories {
     }
 }
 ```
-Put the pinmosdk-x.y.x.aar in `libs` folder, then include it in the app dependencies
+Put the pinmosdk-x.y.x.aar in `libs` folder, then include it in the app dependencies<br/>
+And since the transitive dependencies are not bundled in the aar, you need to include these in your app `build.gradle` as well
 ```groovy
 dependencies {
     implementation(name: "pinmosdk-x.y.z", ext: "aar")
-}
-```
 
-Since the transistive dependencies are not bundled in the aar, you need to include these in your app `build.gradle` as well
-```groovy
-dependencies {
     implementation "com.android.support:design:27.1.1"
     // Force resolution
     implementation "com.android.support:cardview-v7:27.1.1"
@@ -48,6 +67,7 @@ dependencies {
     implementation "com.facebook.android:facebook-share:4.29.0"
 }
 ```
+
 
 ## Setup
 #### Api keys
@@ -86,8 +106,9 @@ final PinmoAppOptions options = new PinmoAppOptions.Builder()
 PinmoApp.initApp(options);
 ```
 
+
 ## Usage
-Pinmo will cache the last successfully fetched feed, so you can display whenever it's ready
+Pinmo will cache the last successfully fetched feed, so you can display whenever it's ready<br/>
 To fetch or refresh the feed for a certain user, call `fetchFeed(String email)`
 ```java
 final String email = "test123@gmail.com";
